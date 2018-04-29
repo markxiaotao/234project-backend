@@ -25,4 +25,7 @@ public class Product {
     String imageLocation;
     double price;
 
+    public double getPrice() {
+        return price;
+    }
 }
