@@ -4,6 +4,8 @@ import camt.se234.project.dao.ProductDao;
 import camt.se234.project.entity.Product;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 
 public class ProductServiceImplTests {
     ProductServiceImpl productService;
@@ -32,6 +35,27 @@ public class ProductServiceImplTests {
         assertThat(productService.getAllProducts(),hasItems(new Product(000001L,"P000001","Laptop","Mobile computer","GoodImage",55.0)
             ,new Product(000002L,"P000002","Phone","Mobile phone","GoodImage2",22.0)
             ,new Product(000003L,"P000003","Paid","Mini mac","GoodImage3",30.0)));
+    }
+
+    @Test
+    public void testGetAvailableProducts(){
+        List<Product> mockProducts = new ArrayList<>();
+        mockProducts.add(new Product(000001L,"P000001","Laptop","Mobile computer","GoodImage",55.0));
+        mockProducts.add(new Product(000002L,"P000002","Phone","Mobile phone","GoodImage2",22.0));
+        mockProducts.add(new Product(000003L,"P000003","Paid","Mini mac","GoodImage3",0.0));
+        when(productDao.getProducts()).thenReturn(mockProducts);
+        assertThat(productService.getAvailableProducts(),hasItems(new Product(000001L,"P000001","Laptop","Mobile computer","GoodImage",55.0)
+                ,new Product(000002L,"P000002","Phone","Mobile phone","GoodImage2",22.0)));
+    }
+
+    @Test
+    public void testGetUnavailableProductSize(){
+        List<Product> mockProducts = new ArrayList<>();
+        mockProducts.add(new Product(000001L,"P000001","Laptop","Mobile computer","GoodImage",55.0));
+        mockProducts.add(new Product(000002L,"P000002","Phone","Mobile phone","GoodImage2",-2.0));
+        mockProducts.add(new Product(000003L,"P000003","Paid","Mini mac","GoodImage3",0.0));
+        when(productDao.getProducts()).thenReturn(mockProducts);
+        assertThat(productService.getUnavailableProductSize(),is(2));
     }
 
 }
