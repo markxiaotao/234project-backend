@@ -7,7 +7,8 @@ before_install:
 - sudo mv docker-compose /usr/local/bin
 - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 install:
-- ./mvnw install -Dmaven.javadoc.skip=true -B -V
+- mvn -N io.takari:maven:wrapper
+- ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 - ls -l
 - docker build --build-arg JAR_FILE=/target/backend.jar -t $DOCKER_USERNAME/project234-backend .
 - docker push $DOCKER_USERNAME/project234-backend
